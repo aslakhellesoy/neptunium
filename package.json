@@ -1,0 +1,7 @@
+{
+  "name": "neptunium",
+  "version": "1.0.0",
+  "description": "Simple CQRS framework",
+  "main": "index.js",
+  "license": "MIT"
+}
