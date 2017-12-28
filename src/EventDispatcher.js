@@ -7,7 +7,11 @@ module.exports = class EventDispatcher {
     const eventHandlerName = `on${event.constructor.name}`
     if (typeof this._target[eventHandlerName] === 'function') {
       const eventAttributes = Object.assign({}, event.data, { entityId: event.entityId })
-      await this._target[eventHandlerName](eventAttributes)
+      return await this._target[eventHandlerName](eventAttributes)
     }
+  }
+
+  get target() {
+    return this._target
   }
 }

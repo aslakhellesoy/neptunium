@@ -3,9 +3,12 @@ const Repository = require('./Repository')
 const EventDispatcher = require('./EventDispatcher')
 const DispatchingEventStore = require('./eventstore/DispatchingEventStore')
 
-module.exports = function buildCommandBus(eventStore, projectors) {
-  const projectorEventDispatchers = projectors.map(projector => new EventDispatcher(projector))
-  const dispatchingEventStore = new DispatchingEventStore(eventStore, projectorEventDispatchers)
+module.exports = function buildCommandBus(eventStore, projectors, sagaClasses) {
+  const projectorDispatchers = projectors.map(projector => new EventDispatcher(projector))
+  const sagaClassDispatchers = sagaClasses.map(sagaClass => new EventDispatcher(sagaClass))
+  const dispatchingEventStore = new DispatchingEventStore(eventStore, projectorDispatchers, sagaClassDispatchers)
   const repository = new Repository(dispatchingEventStore)
-  return new CommandBus(repository)
+  const commandBus = new CommandBus(repository)
+  dispatchingEventStore.commandBus = commandBus
+  return commandBus
 }

@@ -3,5 +3,8 @@
   "version": "1.0.0",
   "description": "Simple CQRS framework",
   "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "value-object": "^0.0.10"
+  }
 }
