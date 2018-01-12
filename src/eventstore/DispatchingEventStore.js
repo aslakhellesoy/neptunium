@@ -22,15 +22,15 @@ module.exports = class DispatchingEventStore {
     }
 
     for (const sagaClassDispatcher of this._sagaClassDispatchers) {
-      let result = await sagaClassDispatcher.dispatch(event)
-      if (result) {
-        const Saga = sagaClassDispatcher.target
-        let saga
+      const startsSaga = await sagaClassDispatcher.dispatch(event)
+      if (startsSaga) {
+        let sagaDispatcher
         const end = () => {
-          this._sagaDispatchers.delete(saga)
+          this._sagaDispatchers.delete(sagaDispatcher)
         }
-        saga = new Saga({ commandBus: this._commandBus, end })
-        const sagaDispatcher = new EventDispatcher(saga)
+        const Saga = sagaClassDispatcher.target
+        const saga = new Saga({ commandBus: this._commandBus, end })
+        sagaDispatcher = new EventDispatcher(saga)
         this._sagaDispatchers.add(sagaDispatcher)
         await sagaDispatcher.dispatch(event)
       }
